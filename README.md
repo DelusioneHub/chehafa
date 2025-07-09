@@ -142,12 +142,55 @@ active: true
 Contenuto biografico dettagliato...
 ```
 
+## 🏎️ Aggiornamento Dati F1
+
+Per aggiornare i dati della Formula 1 e fare il deploy:
+
+### 1. Aggiornamento Dati
+```bash
+# Attiva l'ambiente Python
+source venv/bin/activate
+
+# Aggiorna i dati F1
+cd scripts
+python3 update-data-optimized.py
+
+# Torna alla directory principale
+cd ..
+```
+
+### 2. Commit e Deploy
+```bash
+# Verifica i file modificati
+git status
+
+# Aggiungi i file aggiornati
+git add .
+
+# Commit con messaggio descrittivo
+git commit -m "Update F1 data - $(date '+%Y-%m-%d %H:%M')"
+
+# Push su GitHub (triggera automaticamente il deploy su Netlify)
+git push origin main
+```
+
+### 3. Verifica Deploy
+- Il sito si aggiorna automaticamente su Netlify dopo il push
+- Controlla lo stato del deploy su: [Netlify Dashboard](https://app.netlify.com/)
+- Il sito sarà disponibile in 1-2 minuti
+
+### 4. Comandi Rapidi
+```bash
+# Comando completo per aggiornare tutto
+source venv/bin/activate && cd scripts && python3 update-data-optimized.py && cd .. && git add . && git commit -m "Update F1 data - $(date '+%Y-%m-%d %H:%M')" && git push origin main
+```
+
 ## 🌐 Deploy
 
 Il sito è configurato per il deploy su Netlify:
 
-1. **Collega il repository** al tuo account Netlify
-2. **Imposta le variabili di build**:
+1. **Repository**: https://github.com/DelusioneHub/chehafa
+2. **Configurazione build**:
    - Build command: `npm run build`
    - Publish directory: `dist`
    - Node version: `18`
@@ -229,6 +272,46 @@ Per personalizzare il tema:
 2. **Aggiorna i font** in `src/styles/global.css`
 3. **Personalizza i componenti** nei file `.astro`
 4. **Modifica il layout** in `src/layouts/BaseLayout.astro`
+
+## 🔧 Troubleshooting
+
+### Problemi comuni
+
+**Errore Python "ModuleNotFoundError":**
+```bash
+# Assicurati che l'ambiente virtuale sia attivo
+source venv/bin/activate
+
+# Installa le dipendenze Python
+pip install -r requirements.txt  # se esiste
+pip install fastf1 requests
+```
+
+**Errore Git "Permission denied":**
+```bash
+# Verifica le credenziali Git
+git config user.name "Il tuo nome"
+git config user.email "la-tua-email@email.com"
+```
+
+**Dati F1 non aggiornati:**
+```bash
+# Pulisci la cache e riprova
+rm -rf cache/
+cd scripts
+python3 update-data-optimized.py
+```
+
+**Build Netlify fallisce:**
+- Controlla che `package.json` non contenga dipendenze Python
+- Verifica che tutti i file JSON siano committati
+- Controlla i log di build su Netlify
+
+### File importanti da monitorare
+- `latest-session.json` - Dati ultima sessione
+- `current-season.json` - Dati stagione corrente  
+- `next-race.json` - Prossima gara
+- `public/data/` - Dati per il sito web
 
 ## 🤝 Contribuire
 
