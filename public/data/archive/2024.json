@@ -1,0 +1,32 @@
+{
+  "season": 2024,
+  "completed": true,
+  "final_standings": {
+    "drivers": [
+      {
+        "position": 3,
+        "name": "Charles Leclerc",
+        "driver_number": 16,
+        "points": 319,
+        "wins": 3,
+        "podiums": 9
+      },
+      {
+        "position": 5,
+        "name": "Carlos Sainz Jr.",
+        "driver_number": 55,
+        "points": 259,
+        "wins": 2,
+        "podiums": 8
+      }
+    ],
+    "constructor": {
+      "position": 2,
+      "points": 578,
+      "wins": 5,
+      "podiums": 17
+    }
+  },
+  "note": "Final season for Sainz-Leclerc partnership",
+  "archived_date": "2025-07-06T00:33:20.375219"
+}

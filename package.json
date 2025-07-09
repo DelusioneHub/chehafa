@@ -1,0 +1,36 @@
+{
+  "name": "che-ha-fatto-la-ferrari",
+  "type": "module",
+  "version": "0.0.1",
+  "scripts": {
+    "dev": "astro dev",
+    "start": "astro dev",
+    "build": "astro check && astro build",
+    "preview": "astro preview",
+    "astro": "astro",
+    "lint": "eslint . --ext .astro,.js,.jsx,.ts,.tsx --fix",
+    "format": "prettier --write .",
+    "fetch-f1-data": "cd scripts && python3 fetch_f1_data.py",
+    "update-data": "cd scripts && python3 update-data.py",
+    "dev-with-data": "npm run update-data && npm run dev",
+    "build-with-data": "npm run update-data && npm run build"
+  },
+  "dependencies": {
+    "@astrojs/check": "^0.9.3",
+    "@astrojs/mdx": "^4.3.0",
+    "@astrojs/sitemap": "^3.1.6",
+    "@astrojs/tailwind": "^5.1.0",
+    "astro": "^5.11.0",
+    "fastf1": "^3.4.0",
+    "tailwindcss": "^3.4.10",
+    "typescript": "^5.5.4"
+  },
+  "devDependencies": {
+    "@typescript-eslint/eslint-plugin": "^8.5.0",
+    "@typescript-eslint/parser": "^8.5.0",
+    "eslint": "^9.10.0",
+    "eslint-plugin-astro": "^1.2.3",
+    "prettier": "^3.3.3",
+    "prettier-plugin-astro": "^0.14.1"
+  }
+}

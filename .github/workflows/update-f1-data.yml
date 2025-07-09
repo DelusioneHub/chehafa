@@ -1,0 +1,116 @@
+name: Update F1 Data
+
+on:
+  schedule:
+    # Run every hour during race weekends (Friday-Sunday)
+    - cron: '0 * * * 5-7'
+    # Run every 6 hours during non-race days
+    - cron: '0 */6 * * 0-4'
+  workflow_dispatch: # Allow manual trigger
+  push:
+    paths:
+      - 'scripts/update-data.py'
+      - '.github/workflows/update-f1-data.yml'
+
+jobs:
+  update-data:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v4
+      with:
+        token: ${{ secrets.GITHUB_TOKEN }}
+    
+    - name: Set up Python
+      uses: actions/setup-python@v4
+      with:
+        python-version: '3.11'
+        cache: 'pip'
+    
+    - name: Install dependencies
+      run: |
+        python -m pip install --upgrade pip
+        pip install fastf1 pandas
+    
+    - name: Create necessary directories
+      run: |
+        mkdir -p public/data/{drivers,races,archive}
+        mkdir -p cache
+        mkdir -p logs
+    
+    - name: Run F1 data update
+      run: |
+        cd scripts
+        python update-data.py
+      env:
+        PYTHONPATH: ${{ github.workspace }}
+    
+    - name: Check for data changes
+      id: check_changes
+      run: |
+        if git diff --quiet public/data/; then
+          echo "changes=false" >> $GITHUB_OUTPUT
+          echo "No F1 data changes detected"
+        else
+          echo "changes=true" >> $GITHUB_OUTPUT
+          echo "F1 data changes detected"
+        fi
+    
+    - name: Commit and push changes
+      if: steps.check_changes.outputs.changes == 'true'
+      run: |
+        git config --local user.email "action@github.com"
+        git config --local user.name "GitHub Action"
+        git add public/data/
+        git add logs/ || true  # logs might not exist yet
+        git commit -m "🏎️ Update F1 data - $(date '+%Y-%m-%d %H:%M UTC')" || exit 0
+        git push
+    
+    - name: Create deployment trigger
+      if: steps.check_changes.outputs.changes == 'true'
+      uses: actions/github-script@v7
+      with:
+        script: |
+          github.rest.repos.createDispatchEvent({
+            owner: context.repo.owner,
+            repo: context.repo.repo,
+            event_type: 'data-updated'
+          });
+
+  deploy:
+    needs: update-data
+    if: needs.update-data.outputs.changes == 'true'
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v4
+      with:
+        ref: main
+    
+    - name: Setup Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: '18'
+        cache: 'npm'
+    
+    - name: Install dependencies
+      run: npm ci
+    
+    - name: Build website
+      run: npm run build
+    
+    - name: Deploy to Netlify
+      if: github.ref == 'refs/heads/main'
+      uses: nwtgck/actions-netlify@v3.0
+      with:
+        publish-dir: './dist'
+        production-branch: main
+        github-token: ${{ secrets.GITHUB_TOKEN }}
+        deploy-message: "Deploy from GitHub Actions - F1 Data Updated"
+        enable-pull-request-comment: false
+        enable-commit-comment: true
+      env:
+        NETLIFY_AUTH_TOKEN: ${{ secrets.NETLIFY_AUTH_TOKEN }}
+        NETLIFY_SITE_ID: ${{ secrets.NETLIFY_SITE_ID }}

@@ -1,0 +1,171 @@
+---
+import BaseLayout from '@/layouts/BaseLayout.astro';
+---
+
+<BaseLayout title="Classifiche 2025 - Che ha fatto la Ferrari">
+  <!-- Hero Section -->
+  <section class="bg-gradient-to-br from-ferrari-red via-ferrari-red/90 to-black py-16">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+      <h1 class="font-display font-black text-4xl md:text-6xl text-white mb-4">
+        Classifiche <span class="text-ferrari-yellow">2025</span>
+      </h1>
+      <p class="text-xl md:text-2xl text-white/90 mb-8">
+        Campionato Mondiale di Formula 1
+      </p>
+      <div class="bg-black/20 rounded-lg p-4 inline-block backdrop-blur-sm">
+        <p class="text-white font-bold text-lg" id="season-info">
+          Caricamento...
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <!-- Standings Content -->
+  <section class="py-16 bg-black min-h-screen">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      
+      <!-- Drivers Championship -->
+      <div class="mb-16">
+        <div class="text-center mb-8">
+          <h2 class="font-display font-bold text-3xl md:text-4xl text-white mb-2">
+            Campionato <span class="text-ferrari-red">Piloti</span>
+          </h2>
+          <div class="w-20 h-1 bg-ferrari-red mx-auto"></div>
+        </div>
+        
+        <div class="bg-ferrari-gray rounded-2xl p-6 md:p-8 overflow-hidden">
+          <div id="drivers-standings" class="space-y-3">
+            <div class="text-center text-white/60 py-8">
+              <div class="animate-pulse">Caricamento classifiche piloti...</div>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <!-- Constructors Championship -->
+      <div>
+        <div class="text-center mb-8">
+          <h2 class="font-display font-bold text-3xl md:text-4xl text-white mb-2">
+            Campionato <span class="text-ferrari-red">Costruttori</span>
+          </h2>
+          <div class="w-20 h-1 bg-ferrari-red mx-auto"></div>
+        </div>
+        
+        <div class="bg-ferrari-gray rounded-2xl p-6 md:p-8 overflow-hidden">
+          <div id="constructors-standings" class="space-y-3">
+            <div class="text-center text-white/60 py-8">
+              <div class="animate-pulse">Caricamento classifiche costruttori...</div>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+    </div>
+  </section>
+
+  <script>
+    async function loadStandings() {
+      try {
+        const response = await fetch('/api/standings.json');
+        const data = await response.json();
+        
+        if (data.drivers && data.constructors && !data.message) {
+          // Update season info
+          document.getElementById('season-info').textContent = 
+            `Stagione ${data.season} • ${data.completed_races} gare completate`;
+          
+          // Update drivers standings
+          const driversContainer = document.getElementById('drivers-standings');
+          driversContainer.innerHTML = data.drivers.map(driver => {
+            const isFerrari = driver.team_name === 'Ferrari';
+            const positionClass = driver.position <= 3 ? 'text-ferrari-yellow' : 'text-white';
+            const bgClass = isFerrari ? 'bg-ferrari-red/20 border-ferrari-red' : 'bg-ferrari-gray-light';
+            const nameClass = isFerrari ? 'text-ferrari-yellow font-bold' : 'text-white';
+            
+            return `
+              <div class="flex items-center justify-between p-4 rounded-xl ${bgClass} border-2 border-transparent hover:border-ferrari-red/40 transition-all duration-300 group">
+                <div class="flex items-center space-x-4">
+                  <div class="w-12 h-12 rounded-full bg-ferrari-red flex items-center justify-center text-white font-bold text-lg group-hover:scale-110 transition-transform">
+                    ${driver.position}
+                  </div>
+                  <div>
+                    <h3 class="${nameClass} text-lg font-semibold">${driver.full_name}</h3>
+                    <p class="text-gray-300 text-sm">${driver.team_name}</p>
+                  </div>
+                </div>
+                <div class="text-right">
+                  <div class="text-2xl font-bold ${positionClass}">${driver.total_points}</div>
+                  <div class="text-gray-400 text-sm">
+                    ${driver.wins}W • ${driver.podiums}P
+                  </div>
+                </div>
+              </div>
+            `;
+          }).join('');
+          
+          // Update constructors standings
+          const constructorsContainer = document.getElementById('constructors-standings');
+          constructorsContainer.innerHTML = data.constructors.map(constructor => {
+            const isFerrari = constructor.team_name === 'Ferrari';
+            const positionClass = constructor.position <= 3 ? 'text-ferrari-yellow' : 'text-white';
+            const bgClass = isFerrari ? 'bg-ferrari-red/20 border-ferrari-red' : 'bg-ferrari-gray-light';
+            const nameClass = isFerrari ? 'text-ferrari-yellow font-bold' : 'text-white';
+            
+            return `
+              <div class="flex items-center justify-between p-4 rounded-xl ${bgClass} border-2 border-transparent hover:border-ferrari-red/40 transition-all duration-300 group">
+                <div class="flex items-center space-x-4">
+                  <div class="w-12 h-12 rounded-full bg-ferrari-red flex items-center justify-center text-white font-bold text-lg group-hover:scale-110 transition-transform">
+                    ${constructor.position}
+                  </div>
+                  <div>
+                    <h3 class="${nameClass} text-lg font-semibold">${constructor.team_name}</h3>
+                    <p class="text-gray-300 text-sm">
+                      ${constructor.drivers.map(d => d.full_name.split(' ')[1]).join(' • ')}
+                    </p>
+                  </div>
+                </div>
+                <div class="text-right">
+                  <div class="text-2xl font-bold ${positionClass}">${constructor.total_points}</div>
+                  <div class="text-gray-400 text-sm">
+                    ${constructor.wins}W • ${constructor.podiums}P
+                  </div>
+                </div>
+              </div>
+            `;
+          }).join('');
+          
+        } else {
+          // Show fallback message
+          document.getElementById('season-info').textContent = 
+            data.message || 'Dati non disponibili';
+          
+          document.getElementById('drivers-standings').innerHTML = 
+            '<div class="text-center text-white/60 py-8">Classifiche piloti non ancora disponibili</div>';
+          
+          document.getElementById('constructors-standings').innerHTML = 
+            '<div class="text-center text-white/60 py-8">Classifiche costruttori non ancora disponibili</div>';
+        }
+      } catch (error) {
+        console.error('Error loading standings:', error);
+        document.getElementById('season-info').textContent = 'Errore nel caricamento dati';
+        document.getElementById('drivers-standings').innerHTML = 
+          '<div class="text-center text-white/60 py-8">Servizio temporaneamente non disponibile</div>';
+        document.getElementById('constructors-standings').innerHTML = 
+          '<div class="text-center text-white/60 py-8">Servizio temporaneamente non disponibile</div>';
+      }
+    }
+    
+    // Load data when page loads
+    document.addEventListener('DOMContentLoaded', loadStandings);
+    
+    // Add some visual effects on scroll
+    window.addEventListener('scroll', () => {
+      const scrolled = window.pageYOffset;
+      const parallax = document.querySelector('.bg-gradient-to-br');
+      const speed = scrolled * 0.5;
+      if (parallax) {
+        parallax.style.transform = `translateY(${speed}px)`;
+      }
+    });
+  </script>
+</BaseLayout>

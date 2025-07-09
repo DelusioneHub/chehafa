@@ -1,0 +1,191 @@
+---
+import BaseLayout from '@/layouts/BaseLayout.astro';
+---
+
+<BaseLayout title="Che ha fatto la Ferrari - Risultati Formula 1">
+  <!-- Hero Section -->
+  <section class="min-h-screen bg-gradient-to-br from-ferrari-red via-ferrari-red/90 to-black flex items-center justify-center">
+    <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+      <h1 class="font-display font-black text-5xl md:text-7xl text-white mb-6">
+        Che ha fatto la <span class="text-ferrari-yellow">Ferrari</span>
+      </h1>
+      <p class="text-xl md:text-2xl text-white/90 mb-12 max-w-2xl mx-auto">
+        Risultati in tempo reale di Leclerc e Hamilton
+      </p>
+      
+      <!-- Latest Session Results -->
+      <div class="bg-black/30 backdrop-blur-sm rounded-2xl p-8 md:p-12 border border-white/10 mb-8">
+        <div id="latest-session-container">
+          <h2 class="text-2xl md:text-3xl font-bold text-white mb-8" id="session-title">
+            Caricamento...
+          </h2>
+          
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-6" id="drivers-results">
+            <!-- Dynamic content will be loaded here -->
+          </div>
+        </div>
+      </div>
+      
+      <!-- Next Session -->
+      <div class="bg-black/30 backdrop-blur-sm rounded-2xl p-6 md:p-8 border border-white/10">
+        <div id="next-session-container">
+          <h3 class="text-xl md:text-2xl font-bold text-ferrari-yellow mb-4 text-center">
+            Prossima Sessione
+          </h3>
+          
+          <div class="text-center space-y-4">
+            <div class="text-lg md:text-xl text-white font-semibold" id="next-session-name">
+              Caricamento...
+            </div>
+            <div class="text-sm md:text-base text-gray-300" id="next-session-event">
+              <!-- Event info -->
+            </div>
+            <div class="text-sm text-gray-400" id="next-session-date">
+              <!-- Date info -->
+            </div>
+            <div class="text-2xl md:text-3xl font-bold text-ferrari-red mt-6" id="next-session-countdown">
+              <!-- Countdown -->
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <script>
+    async function loadLatestSession() {
+      try {
+        const response = await fetch('/api/latest.json');
+        const data = await response.json();
+        
+        if (data.event && !data.message) {
+          // Update session title
+          document.getElementById('session-title').textContent = `${data.session_type} - ${data.event}`;
+          
+          // Update drivers results
+          const driversContainer = document.getElementById('drivers-results');
+          if (data.results && data.results.length > 0) {
+            driversContainer.innerHTML = data.results.map(driver => {
+              let resultText = `P${driver.position || 'N/A'}`;
+              let additionalInfo = '';
+              
+              // Format time for qualifying sessions
+              if (['Practice 1', 'Practice 2', 'Practice 3', 'Qualifying', 'Sprint Qualifying'].includes(data.session_type)) {
+                let timeToShow = driver.time;
+                
+                // For qualifying, show best time from q1, q2, q3
+                if (data.session_type === 'Qualifying') {
+                  timeToShow = driver.q3 || driver.q2 || driver.q1;
+                }
+                
+                if (timeToShow) {
+                  additionalInfo = `<p class="text-ferrari-yellow text-sm mt-2">${timeToShow}</p>`;
+                }
+              }
+              
+              // Show points for race sessions
+              if (['Race', 'Sprint'].includes(data.session_type)) {
+                const points = driver.points || 0;
+                additionalInfo = `<p class="text-ferrari-yellow text-sm mt-2">${points} punti</p>`;
+              }
+              
+              return `
+                <div class="bg-white/5 rounded-xl p-6 border border-white/10 hover:bg-white/10 transition-colors">
+                  <div class="flex items-center justify-center mb-4">
+                    <div class="w-16 h-16 bg-ferrari-red rounded-full flex items-center justify-center">
+                      <span class="text-white font-bold text-xl">${driver.driver_number}</span>
+                    </div>
+                  </div>
+                  <h3 class="font-bold text-white text-lg mb-2">${driver.name}</h3>
+                  <div class="text-3xl font-bold text-ferrari-red mb-2">${resultText}</div>
+                  ${additionalInfo}
+                </div>
+              `;
+            }).join('');
+          } else {
+            driversContainer.innerHTML = '<div class="text-white/60 text-center col-span-full">Nessun risultato Ferrari disponibile</div>';
+          }
+        } else {
+          document.getElementById('session-title').textContent = data.message || 'Dati non disponibili';
+          document.getElementById('drivers-results').innerHTML = '<div class="text-white/60 text-center col-span-full">Attendere prossima sessione</div>';
+        }
+      } catch (error) {
+        console.error('Error loading latest session:', error);
+        document.getElementById('session-title').textContent = 'Errore nel caricamento';
+        document.getElementById('drivers-results').innerHTML = '<div class="text-white/60 text-center col-span-full">Servizio temporaneamente non disponibile</div>';
+      }
+    }
+    
+    async function loadNextSession() {
+      try {
+        const response = await fetch('/api/next-session.json');
+        const data = await response.json();
+        
+        if (data.name && !data.message) {
+          // Update session info
+          document.getElementById('next-session-name').textContent = `${data.name} - ${data.event}`;
+          document.getElementById('next-session-event').textContent = `${data.location}, ${data.country}`;
+          document.getElementById('next-session-date').textContent = new Date(data.date).toLocaleDateString('it-IT', {
+            weekday: 'long',
+            year: 'numeric',
+            month: 'long',
+            day: 'numeric',
+            hour: '2-digit',
+            minute: '2-digit'
+          });
+          
+          // Start countdown
+          startCountdown(data.date);
+        } else {
+          document.getElementById('next-session-name').textContent = data.message || 'Nessuna sessione programmata';
+          document.getElementById('next-session-event').textContent = '';
+          document.getElementById('next-session-date').textContent = '';
+          document.getElementById('next-session-countdown').textContent = '';
+        }
+      } catch (error) {
+        console.error('Error loading next session:', error);
+        document.getElementById('next-session-name').textContent = 'Errore nel caricamento';
+        document.getElementById('next-session-event').textContent = '';
+        document.getElementById('next-session-date').textContent = '';
+        document.getElementById('next-session-countdown').textContent = '';
+      }
+    }
+    
+    function startCountdown(targetDate) {
+      const countdownElement = document.getElementById('next-session-countdown');
+      
+      function updateCountdown() {
+        const now = new Date().getTime();
+        const target = new Date(targetDate).getTime();
+        const distance = target - now;
+        
+        if (distance < 0) {
+          countdownElement.textContent = 'Sessione iniziata!';
+          return;
+        }
+        
+        const days = Math.floor(distance / (1000 * 60 * 60 * 24));
+        const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+        const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+        const seconds = Math.floor((distance % (1000 * 60)) / 1000);
+        
+        if (days > 0) {
+          countdownElement.textContent = `${days}g ${hours}h ${minutes}m`;
+        } else if (hours > 0) {
+          countdownElement.textContent = `${hours}h ${minutes}m ${seconds}s`;
+        } else {
+          countdownElement.textContent = `${minutes}m ${seconds}s`;
+        }
+      }
+      
+      updateCountdown();
+      setInterval(updateCountdown, 1000);
+    }
+    
+    // Load data when page loads
+    document.addEventListener('DOMContentLoaded', () => {
+      loadLatestSession();
+      loadNextSession();
+    });
+  </script>
+</BaseLayout>

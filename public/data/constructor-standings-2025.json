@@ -1,0 +1,202 @@
+{
+  "season": 2025,
+  "last_updated": "2025-07-09T06:35:37.684115+00:00",
+  "completed_races": 12,
+  "standings": [
+    {
+      "team_name": "McLaren",
+      "total_points": 460,
+      "wins": 9,
+      "podiums": 20,
+      "drivers": [
+        {
+          "driver_number": 81,
+          "full_name": "Oscar Piastri",
+          "points": 234
+        },
+        {
+          "driver_number": 4,
+          "full_name": "Lando Norris",
+          "points": 226
+        }
+      ],
+      "position": 1
+    },
+    {
+      "team_name": "Ferrari",
+      "total_points": 222,
+      "wins": 0,
+      "podiums": 4,
+      "drivers": [
+        {
+          "driver_number": 16,
+          "full_name": "Charles Leclerc",
+          "points": 119
+        },
+        {
+          "driver_number": 44,
+          "full_name": "Lewis Hamilton",
+          "points": 103
+        }
+      ],
+      "position": 2
+    },
+    {
+      "team_name": "Mercedes",
+      "total_points": 210,
+      "wins": 1,
+      "podiums": 6,
+      "drivers": [
+        {
+          "driver_number": 63,
+          "full_name": "George Russell",
+          "points": 147
+        },
+        {
+          "driver_number": 12,
+          "full_name": "Andrea Kimi Antonelli",
+          "points": 63
+        }
+      ],
+      "position": 3
+    },
+    {
+      "team_name": "Red Bull Racing",
+      "total_points": 177,
+      "wins": 2,
+      "podiums": 5,
+      "drivers": [
+        {
+          "driver_number": 1,
+          "full_name": "Max Verstappen",
+          "points": 165
+        },
+        {
+          "driver_number": 30,
+          "full_name": "Liam Lawson",
+          "points": 12
+        }
+      ],
+      "position": 4
+    },
+    {
+      "team_name": "Williams",
+      "total_points": 59,
+      "wins": 0,
+      "podiums": 0,
+      "drivers": [
+        {
+          "driver_number": 23,
+          "full_name": "Alexander Albon",
+          "points": 46
+        },
+        {
+          "driver_number": 55,
+          "full_name": "Carlos Sainz",
+          "points": 13
+        }
+      ],
+      "position": 5
+    },
+    {
+      "team_name": "Kick Sauber",
+      "total_points": 41,
+      "wins": 0,
+      "podiums": 1,
+      "drivers": [
+        {
+          "driver_number": 27,
+          "full_name": "Nico Hulkenberg",
+          "points": 37
+        },
+        {
+          "driver_number": 5,
+          "full_name": "Gabriel Bortoleto",
+          "points": 4
+        }
+      ],
+      "position": 6
+    },
+    {
+      "team_name": "Aston Martin",
+      "total_points": 36,
+      "wins": 0,
+      "podiums": 0,
+      "drivers": [
+        {
+          "driver_number": 18,
+          "full_name": "Lance Stroll",
+          "points": 20
+        },
+        {
+          "driver_number": 14,
+          "full_name": "Fernando Alonso",
+          "points": 16
+        }
+      ],
+      "position": 7
+    },
+    {
+      "team_name": "Racing Bulls",
+      "total_points": 31,
+      "wins": 0,
+      "podiums": 0,
+      "drivers": [
+        {
+          "driver_number": 6,
+          "full_name": "Isack Hadjar",
+          "points": 21
+        },
+        {
+          "driver_number": 22,
+          "full_name": "Yuki Tsunoda",
+          "points": 10
+        }
+      ],
+      "position": 8
+    },
+    {
+      "team_name": "Haas F1 Team",
+      "total_points": 29,
+      "wins": 0,
+      "podiums": 0,
+      "drivers": [
+        {
+          "driver_number": 31,
+          "full_name": "Esteban Ocon",
+          "points": 23
+        },
+        {
+          "driver_number": 87,
+          "full_name": "Oliver Bearman",
+          "points": 6
+        }
+      ],
+      "position": 9
+    },
+    {
+      "team_name": "Alpine",
+      "total_points": 19,
+      "wins": 0,
+      "podiums": 0,
+      "drivers": [
+        {
+          "driver_number": 10,
+          "full_name": "Pierre Gasly",
+          "points": 19
+        },
+        {
+          "driver_number": 7,
+          "full_name": "Jack Doohan",
+          "points": 0
+        },
+        {
+          "driver_number": 43,
+          "full_name": "Franco Colapinto",
+          "points": 0
+        }
+      ],
+      "position": 10
+    }
+  ]
+}
