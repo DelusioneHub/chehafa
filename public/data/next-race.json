@@ -1,0 +1,15 @@
+{
+  "name": "Belgian Grand Prix",
+  "location": "Spa-Francorchamps",
+  "country": "Belgium",
+  "date": "2025-07-27T15:00:00+02:00",
+  "round": 13,
+  "circuit": "Belgian Grand Prix",
+  "sessions": {
+    "fp1": "2025-07-25T12:30:00+02:00",
+    "fp2": "2025-07-25T16:30:00+02:00",
+    "fp3": "2025-07-26T12:00:00+02:00",
+    "qualifying": "2025-07-26T16:00:00+02:00",
+    "race": "2025-07-27T15:00:00+02:00"
+  }
+}

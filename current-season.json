@@ -1,0 +1,32 @@
+{
+  "season": 2025,
+  "last_updated": "2025-07-05T23:14:54.839602+00:00",
+  "completed_races": 11,
+  "drivers": [
+    {
+      "driver_number": 16,
+      "name": "Charles Leclerc",
+      "country": "MON",
+      "points": 115,
+      "wins": 0,
+      "podiums": 4,
+      "team": "Ferrari",
+      "position": 1
+    },
+    {
+      "driver_number": 44,
+      "name": "Lewis Hamilton",
+      "country": "GBR",
+      "points": 77,
+      "wins": 0,
+      "podiums": 0,
+      "team": "Ferrari",
+      "position": 2
+    }
+  ],
+  "constructor": {
+    "team": "Ferrari",
+    "points": 192,
+    "position": null
+  }
+}

@@ -1,0 +1,15 @@
+{
+  "name": "British Grand Prix",
+  "location": "Silverstone",
+  "country": "United Kingdom",
+  "date": "2025-07-06T15:00:00+01:00",
+  "round": 12,
+  "circuit": "British Grand Prix",
+  "sessions": {
+    "fp1": "2025-07-04T12:30:00+01:00",
+    "fp2": "2025-07-04T16:00:00+01:00",
+    "fp3": "2025-07-05T11:30:00+01:00",
+    "qualifying": "2025-07-05T15:00:00+01:00",
+    "race": "2025-07-06T15:00:00+01:00"
+  }
+}

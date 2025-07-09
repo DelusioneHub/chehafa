@@ -174,9 +174,9 @@ cache/
 *.sqlite
 
 # Data files
-current-season.json
-latest-session.json
-next-race.json
+# current-season.json
+# latest-session.json
+# next-race.json
 logs/
 
 # Embedded git repository
